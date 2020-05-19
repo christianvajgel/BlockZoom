@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Block Zoom</title>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <style>
+
+            #divContent {
+                text-align: center;
+                position: absolute;
+                height: 100%;
+                width: 100%;
+            }
+
+        </style>
+    </head>
+    <body>
+        <div id="divContent">
+            <h2>Random number [0-1] generated to simulate content of the test.</h2>
+            <h2 id="randomNumber"></h2>
+            <br>
+            <h3>Zoom function blocked, accessibility features may be affected.</h3>
+            <h3>Try to Zoom In, press:<br> 'Ctrl' plus '+' or 'Ctrl' plus Scroll Up (mouse wheel)</h3>
+            <h3>Try to Zoom Out, press:<br> 'Ctrl' plus '-' or 'Ctrl' plus Scroll Down (mouse wheel)</h3>
+        </div>
+
+        <script>
+
+            let userBrowser = checkBrowser(),
+                randomNumber = Math.random();
+
+            console.log("Random number generated: " + randomNumber);
+            document.getElementById("randomNumber").innerHTML = randomNumber.toString();
+
+            switch (userBrowser) {
+                case "chrome": chromeBrowser(); break;
+                default: otherBrowser(); break;
+            }
+
+            function checkBrowser() {
+                let test = function(regexp) {
+                    return regexp.test(window.navigator.userAgent);
+                }
+
+                switch (true) {
+                    case test(/chrome/i) && !!window.chrome: return "chrome";
+                    default: return "other";
+                }
+            }
+
+            function chromeBrowser() {
+                (function(){
+                    setInterval("document.body.style.zoom=1/window.devicePixelRatio",0);
+                    let newView=document.createElement("meta");
+                    newView.id="viewport";
+                    newView.name="viewport";
+                    newView.content="width=device-width, initial-scale=1";
+                    document.body.parentElement.children[0].appendChild(newView);
+                })();
+
+                window.onresize = function() {
+                    let zoom = window.devicePixelRatio;
+                    document.body.style.zoom = (100 / zoom) + "%";
+                }
+            }
+
+            function otherBrowser() {
+                $(document).keydown(function(event) {
+                    if (event.ctrlKey == true && (event.which == '61' || event.which == '107' ||
+                        event.which == '173' || event.which == '109' || event.which == '187' || event.which == '189')) {
+                        event.preventDefault();
+                    }
+                });
+
+                $(window).bind('mousewheel DOMMouseScroll', function (event) {
+                    if (event.ctrlKey === true) {
+                        event.preventDefault();
+                    }
+                });
+            }
+
+        </script>
+    </body>
+</html>
+
+<!-- References: -->
+
+<!--https://stackoverflow.com/a/31131948-->
+
+<!--https://stackoverflow.com/a/33858806-->
+
+<!--https://stackoverflow.com/a/49448231-->

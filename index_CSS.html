@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Block Zoom</title>
+        <style>
+    
+            #divBlockContent {
+                background-color: #2e2e38;
+                position: absolute;
+                height: 100%;
+                width: 100%;
+            }
+    
+            #divContent {
+                width: 100%;
+                text-align: center;
+                position: absolute;
+                z-index: -1 !important;
+            }
+
+            #divTime {
+                display: flex;
+            }
+    
+            #divMainInformation {
+                text-align: center;
+                position: relative;
+                top: 50%;
+            }
+
+            #divButton {
+                text-align: center;
+                position: relative;
+                top: 50%;
+            }
+
+            #testNameH2 {
+                color: #ffe600;
+            }
+
+            #buttonStartTest {
+                display: inline-block;
+            }
+
+            #buttonEndTest {
+                display: none;
+            }
+
+            #buttonReload {
+                display: none;
+            }
+
+            #time {
+                display: none;
+            }
+
+        </style>
+    </head>
+    <body>
+        <div id="divBlockContent">
+            <div id="divTime">
+                <h3 id="time">Time (s): </h3>
+                <h3 id="counter"></h3>
+            </div>
+            <div id="divContent">
+                <h2>Random number [0-1] generated to simulate content of the test.</h2>
+                <h2 id="randomNumber"></h2>
+            </div>
+            <div id="divMainInformation">
+                <h2 id="testNameH2">Test Name</h2>
+                <div id="divButton">
+                    <button id="buttonStartTest" type="submit" onclick="showTest()">Start</button>
+                    <button id="buttonEndTest" type="submit" onclick="endTest()">End</button>
+                    <button id="buttonReload" type="submit" onclick="location.reload()">Reload page</button>
+                </div>
+            </div>
+        </div>
+        
+        <script>
+
+            let randomNumber = Math.random(),
+                counterMinutes = 0,
+                counterSeconds = 0,
+                endOfTest = false;
+
+            function showTest() {
+                console.log("Random number generated: " + randomNumber);
+                document.getElementById("randomNumber").innerHTML = randomNumber.toString();
+                document.getElementById("divBlockContent").style.backgroundColor = 'transparent';
+                document.getElementById("time").style.display = 'inline-block';
+                document.getElementById("testNameH2").style.display = 'none';
+                document.getElementById("buttonStartTest").style.display = 'none';
+                document.getElementById("buttonEndTest").style.display = 'inline-block';
+                setInterval(stopWatch, 1000);
+            }
+
+            function stopWatch() {
+                if (!endOfTest){
+                    let time;
+
+                    counterSeconds < 59 ? counterSeconds++ : (counterMinutes++,counterSeconds=0);
+                    counterSeconds < 10 ? time = counterMinutes + ":0" + counterSeconds : time = counterMinutes + ":" + counterSeconds;
+                    updateStopWatch(time);
+                }
+            }
+
+            function updateStopWatch(time) {
+                document.getElementById("counter").innerHTML = time.toString();
+            }
+
+            function endTest() {
+                endOfTest = true;
+                document.getElementById("buttonEndTest").style.display = 'none';
+                document.getElementById("buttonReload").style.display = 'inline-block';
+            }
+
+        </script>
+    </body>
+</html>
